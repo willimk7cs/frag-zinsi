@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TikTok-Anmeldung – Frag Zinsi</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="../../assets/favicon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><img src="../../assets/zinsi.png" alt=""><a href="../../">Frag Zinsi</a></header>
+  <main>
+    <h1>TikTok-Anmeldung</h1>
+    <p id="msg">Diese Seite zeigt den Anmelde-Code für die App „Zinsi Publisher“ an. Sie speichert nichts und überträgt keine Daten.</p>
+    <div id="out" hidden>
+      <p>Kopiere diesen Code und füge ihn im Terminal ein, wo <code>auth/tiktok.mjs</code> danach fragt:</p>
+      <p class="code" id="code"></p>
+      <p><button id="copy" type="button">Code kopieren</button> <span id="copied" hidden>Kopiert.</span></p>
+      <p style="color:var(--fog);font-size:14px">Der Code ist nur wenige Minuten gültig und funktioniert nur einmal.</p>
+    </div>
+  </main>
+  <footer><a href="../../impressum.html">Impressum</a><a href="../../datenschutz.html">Datenschutz</a></footer>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const code = q.get('code'), err = q.get('error'), state = q.get('state');
+  const msg = document.getElementById('msg');
+  if (err) {
+    msg.textContent = `TikTok meldet einen Fehler: ${err}${q.get('error_description') ? ` (${q.get('error_description')})` : ''}`;
+  } else if (code) {
+    document.getElementById('out').hidden = false;
+    // Code + state zusammen, damit das Skript den state prüfen kann
+    document.getElementById('code').textContent = state ? `${code} ${state}` : code;
+    document.getElementById('copy').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(document.getElementById('code').textContent); document.getElementById('copied').hidden = false; }
+      catch { getSelection().selectAllChildren(document.getElementById('code')); }
+    });
+    history.replaceState(null, '', location.pathname); // Code nicht im Verlauf behalten
+  }
+</script>
+</body>
+</html>
